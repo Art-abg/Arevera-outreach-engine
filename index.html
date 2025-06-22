@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Interactive Strategic Plan: Arevera's AI-Powered Outreach Engine
+    </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f8fafc;
+        background-image: radial-gradient(#e2e8f0 0.5px, transparent 0.5px),
+          radial-gradient(#e2e8f0 0.5px, #f8fafc 0.5px);
+        background-size: 20px 20px;
+        background-position: 0 0, 10px 10px;
+      }
+
+      .gradient-text {
+        background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        height: 350px;
+        max-height: 400px;
+      }
+
+      @media (max-width: 768px) {
+        .chart-container {
+          height: 400px;
+        }
+      }
+
+      .nav-link {
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .nav-link:after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 0;
+        left: 50%;
+        background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%);
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+      }
+
+      .nav-link:hover:after {
+        width: 100%;
+      }
+
+      .nav-link:hover {
+        color: #0d9488;
+      }
+
+      .active-nav {
+        color: #0d9488;
+        font-weight: 600;
+      }
+
+      .active-nav:after {
+        width: 100%;
+      }
+
+      .stage-box {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        border: 2px solid transparent;
+        background: white;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+
+      .stage-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        border-color: #0d9488;
+      }
+
+      .stage-box.active {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        border-color: #0d9488;
+        background: linear-gradient(
+          135deg,
+          rgba(13, 148, 136, 0.05) 0%,
+          rgba(8, 145, 178, 0.05) 100%
+        );
+      }
+
+      .tier-button {
+        transition: all 0.3s ease;
+      }
+
+      .tier-button.active {
+        background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%);
+        color: white;
+        transform: scale(1.05);
+        z-index: 10;
+      }
+
+      .card-hover {
+        transition: all 0.3s ease;
+      }
+
+      .card-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .animate-fade-in {
+        animation: fadeIn 0.6s ease forwards;
+      }
+
+      .glassmorphism {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+    </style>
+    <!-- Chosen Palette: Arevera Calm Tech -->
+    <!-- Application Structure Plan: The SPA is designed as an interactive dashboard, departing from the linear structure of the source report. It uses a top navigation bar to anchor-link to thematic sections: Overview, The Engine, The Stack, The Strategy, The Roadmap, and Safeguards. This non-linear, task-oriented structure allows users to immediately jump to the concepts most relevant to them. Key interactions include: 1) A clickable diagram for the 'Engine' workflow, revealing details for each stage. 2) An interactive toggle for 'The Stack' to compare the three implementation tiers, dynamically updating both text and a comparison chart. 3) A visual timeline for the 'Roadmap'. This structure was chosen to transform a dense document into an explorable and digestible experience, promoting user engagement and understanding over passive reading. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: 5-Stage "Automated Outreach Engine" -> Goal: Organize & Explain -> Viz/Presentation: Interactive HTML/CSS Diagram -> Interaction: On-click reveal of detailed descriptions for each stage -> Justification: A dynamic, clickable flow chart is more engaging and intuitive than a static list, encouraging exploration of the process. This is built with HTML/Tailwind to adhere to the NO SVG/Mermaid constraint.
+        - Report Info: 3-Tier n8n Solution Stacks (Lean, Scalable, Enterprise) -> Goal: Compare -> Viz/Presentation: Interactive Toggles + Chart.js Horizontal Bar Chart -> Interaction: Clicking a tier button updates all associated descriptive content and redraws the bar chart with that tier's data (cost, speed, etc.) -> Justification: This allows for direct, side-by-side comparison of complex options, making the trade-offs clear. Chart.js provides a clear visual for the quantitative aspects.
+        - Report Info: Phased Project Plan & Timeline -> Goal: Show Change/Sequence -> Viz/Presentation: Visual Gantt-style Timeline built with HTML/CSS -> Interaction: Hover effects on phases could reveal key tasks (kept simple here for clarity). -> Justification: A visual timeline is more impactful and easier to parse at a glance than a simple table, effectively communicating the project's flow and milestones.
+        - Report Info: R-A-R-E Prompting Framework -> Goal: Inform/Explain -> Viz/Presentation: Styled HTML cards for each component (Role, Action, Result, Example) -> Interaction: None needed, clarity is the goal. -> Justification: Card-based layouts visually segment the components of the framework, making the complex concept easier to understand and remember.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+  </head>
+  <body class="text-slate-700">
+    <header
+      class="glassmorphism sticky top-0 z-50 border-b border-slate-200/50"
+    >
+      <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <div class="flex-shrink-0">
+            <h1 class="text-xl font-bold gradient-text">
+              Arevera Outreach Engine
+            </h1>
+          </div>
+          <div class="hidden md:block">
+            <div class="ml-10 flex items-baseline space-x-6">
+              <a
+                href="#overview"
+                class="nav-link px-3 py-2 text-sm font-medium text-slate-600"
+                >Overview</a
+              >
+              <a
+                href="#engine"
+                class="nav-link px-3 py-2 text-sm font-medium text-slate-600"
+                >The Engine</a
+              >
+              <a
+                href="#stack"
+                class="nav-link px-3 py-2 text-sm font-medium text-slate-600"
+                >The Stack</a
+              >
+              <a
+                href="#strategy"
+                class="nav-link px-3 py-2 text-sm font-medium text-slate-600"
+                >The Strategy</a
+              >
+              <a
+                href="#roadmap"
+                class="nav-link px-3 py-2 text-sm font-medium text-slate-600"
+                >Roadmap</a
+              >
+              <a
+                href="#safeguards"
+                class="nav-link px-3 py-2 text-sm font-medium text-slate-600"
+                >Safeguards</a
+              >
+            </div>
+          </div>
+          <div class="md:hidden">
+            <select
+              id="mobile-nav"
+              aria-label="Navigation Menu"
+              class="block w-full pl-3 pr-10 py-2 text-base border-slate-200 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm rounded-lg bg-white/50 backdrop-blur"
+            >
+              <option value="#overview">Overview</option>
+              <option value="#engine">The Engine</option>
+              <option value="#stack">The Stack</option>
+              <option value="#strategy">The Strategy</option>
+              <option value="#roadmap">Roadmap</option>
+              <option value="#safeguards">Safeguards</option>
+            </select>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+      <section id="overview" class="scroll-mt-20">
+        <div class="text-center mb-12 animate-fade-in">
+          <h2
+            class="text-4xl font-bold tracking-tight gradient-text sm:text-5xl mb-4"
+          >
+            An AI-Powered Workflow for High-Value Client Acquisition
+          </h2>
+          <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600">
+            This interactive plan outlines a phased, scalable strategy to
+            transform Arevera's client acquisition into a powerful, AI-driven
+            "Outreach Engine."
+          </p>
+        </div>
+        <div
+          class="bg-white/80 backdrop-blur p-8 rounded-2xl shadow-lg card-hover"
+        >
+          <h3 class="text-xl font-semibold gradient-text mb-4">
+            Executive Summary
+          </h3>
+          <p class="text-slate-600 leading-relaxed">
+            The current manual process for client acquisition, while precise, is
+            limited in scale and speed. This proposal outlines a modular
+            workflow to automate target selection, prospect research, list
+            building, and personalization. By leveraging a modern tech stack
+            centered on the flexible **n8n automation platform**, this engine
+            will proactively detect buying signals, identify key
+            decision-makers, and generate hyper-personalized outreach drafts
+            that reflect Arevera's premium brand voice.
+          </p>
+          <br />
+          <p class="text-slate-600 leading-relaxed">
+            The plan offers three implementation tiers—from a lean MVP to a full
+            enterprise system—providing clear choices based on budget and
+            objectives. The initial focus is a cost-effective MVP, designed to
+            deliver tangible results and validate the system's effectiveness
+            within the first month. The successful implementation promises to
+            dramatically increase outreach efficiency and build a consistent
+            pipeline of high-value client relationships.
+          </p>
+        </div>
+      </section>
+
+      <div class="my-16 border-t border-slate-200/50"></div>
+
+      <section id="engine" class="scroll-mt-20">
+        <div class="text-center mb-12 animate-fade-in">
+          <h2
+            class="text-4xl font-bold tracking-tight gradient-text sm:text-5xl mb-4"
+          >
+            The Automated Outreach Engine
+          </h2>
+          <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600">
+            A five-stage modular workflow that transforms manual prospecting
+            into a proactive, automated pipeline. Click on a stage to learn
+            more.
+          </p>
+        </div>
+
+        <div class="w-full overflow-x-auto pb-4">
+          <div
+            id="workflow-diagram"
+            class="flex items-center justify-between min-w-[700px] md:min-w-full space-x-2 md:space-x-4"
+          ></div>
+        </div>
+
+        <div
+          id="workflow-details"
+          class="mt-8 bg-white/80 backdrop-blur p-8 rounded-2xl shadow-lg card-hover min-h-[150px] transition-all duration-300"
+        >
+          <div id="details-content" class="text-slate-600">
+            <p class="text-center text-slate-500">
+              Click on a stage above to see its description.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div class="my-16 border-t border-slate-200/50"></div>
+
+      <section id="stack" class="scroll-mt-20">
+        <div class="text-center mb-12 animate-fade-in">
+          <h2
+            class="text-4xl font-bold tracking-tight gradient-text sm:text-5xl mb-4"
+          >
+            The n8n-Centric Solution Stack
+          </h2>
+          <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600">
+            The master workflow can be implemented with various toolsets. Select
+            a tier to explore the options and see how key metrics compare.
+          </p>
+        </div>
+        <div class="flex justify-center mb-8">
+          <div id="tier-buttons" class="inline-flex rounded-lg shadow-lg"></div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          <div
+            id="tier-details"
+            class="bg-white/80 backdrop-blur p-8 rounded-2xl shadow-lg card-hover min-h-[350px]"
+          ></div>
+          <div
+            class="bg-white/80 backdrop-blur p-8 rounded-2xl shadow-lg card-hover"
+          >
+            <h3 class="text-xl font-semibold gradient-text mb-6 text-center">
+              Tier Comparison
+            </h3>
+            <div class="chart-container">
+              <canvas id="tier-comparison-chart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="my-16 border-t border-slate-200/50"></div>
+
+      <section id="strategy" class="scroll-mt-20">
+        <div class="text-center mb-12 animate-fade-in">
+          <h2
+            class="text-4xl font-bold tracking-tight gradient-text sm:text-5xl mb-4"
+          >
+            Core Strategies
+          </h2>
+          <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600">
+            Automating deep research and intelligent personalization are the
+            pillars of this engine's effectiveness.
+          </p>
+        </div>
+        <div class="grid md:grid-cols-2 gap-8">
+          <div
+            class="bg-white/80 backdrop-blur p-8 rounded-2xl shadow-lg card-hover"
+          >
+            <h3 class="text-xl font-semibold gradient-text mb-4">
+              Automated Signal Intelligence
+            </h3>
+            <p class="text-slate-600 mb-4">
+              Instead of manually searching for people, the system reverses the
+              logic. It proactively monitors the digital landscape for "buying
+              signals"—events indicating a need for Arevera's services. When a
+              signal is detected, it automatically triggers the workflow to find
+              the key people involved.
+            </p>
+            <div id="signal-cards" class="space-y-3"></div>
+          </div>
+          <div
+            class="bg-white/80 backdrop-blur p-8 rounded-2xl shadow-lg card-hover"
+          >
+            <h3 class="text-xl font-semibold gradient-text mb-4">
+              The R-A-R-E Personalization Framework
+            </h3>
+            <p class="text-slate-600 mb-4">
+              To generate high-quality, nuanced outreach from an AI, a
+              structured prompt is essential. The R-A-R-E (Role, Action, Result,
+              Example) framework provides the necessary context and constraints.
+            </p>
+            <div id="rare-cards" class="space-y-3"></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="my-16 border-t border-slate-200/50"></div>
+
+      <section id="roadmap" class="scroll-mt-20">
+        <div class="text-center mb-12 animate-fade-in">
+          <h2
+            class="text-4xl font-bold tracking-tight gradient-text sm:text-5xl mb-4"
+          >
+            Implementation Roadmap
+          </h2>
+          <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600">
+            A phased 12-week plan designed to deliver a functional MVP quickly
+            and scale methodically.
+          </p>
+        </div>
+        <div id="timeline-container" class="space-y-8"></div>
+      </section>
+
+      <div class="my-16 border-t border-slate-200/50"></div>
+
+      <section id="safeguards" class="scroll-mt-20">
+        <div class="text-center mb-12 animate-fade-in">
+          <h2
+            class="text-4xl font-bold tracking-tight gradient-text sm:text-5xl mb-4"
+          >
+            Quality Assurance & Safeguards
+          </h2>
+          <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600">
+            A robust strategy to mitigate risks and protect Arevera's premium
+            brand through a Human-in-the-Loop (HITL) system.
+          </p>
+        </div>
+        <div
+          class="bg-white/80 backdrop-blur p-8 rounded-2xl shadow-lg card-hover"
+        >
+          <h3 class="text-xl font-semibold gradient-text mb-4">
+            The HITL Approval Gateway
+          </h3>
+          <p class="text-slate-600 leading-relaxed mb-4">
+            The most critical safeguard is ensuring that the AI system prepares
+            outreach but **never sends it autonomously**. Every single piece of
+            communication must pass through a human for final approval. This
+            provides the perfect synthesis of machine efficiency and human
+            judgment, maintaining 100% oversight on all external communications.
+          </p>
+          <ul id="risks-list" class="space-y-4"></ul>
+        </div>
+      </section>
+
+      <div class="my-16 border-t border-slate-200/50"></div>
+
+      <section id="n8n-poc" class="scroll-mt-20 mb-16">
+        <div class="text-center mb-12 animate-fade-in">
+          <h2
+            class="text-3xl font-bold tracking-tight gradient-text sm:text-4xl mb-4"
+          >
+            n8n Workflow: Proof of Concept (Built in One Evening)
+          </h2>
+          <p class="mt-4 max-w-2xl mx-auto text-lg text-slate-600">
+            Below is a real, working n8n workflow that demonstrates the core
+            automation logic for lead generation. This MVP was built in a single
+            evening as a proof of concept.
+          </p>
+        </div>
+        <div
+          class="flex flex-col md:flex-row items-center justify-center gap-8 bg-white/80 backdrop-blur p-8 rounded-2xl shadow-lg card-hover max-w-4xl mx-auto"
+        >
+          <img
+            src="/public/n8n-leadgen-workflow.png"
+            alt="n8n Leadgen Workflow Screenshot"
+            class="w-full md:w-1/2 rounded-xl border border-slate-200 shadow-md mb-6 md:mb-0"
+            style="max-width: 400px"
+            loading="lazy"
+          />
+          <div class="md:w-1/2">
+            <h3 class="text-xl font-semibold gradient-text mb-2">
+              What this workflow does
+            </h3>
+            <ul class="list-disc pl-5 text-slate-700 mb-4 text-base">
+              <li><b>Manual Trigger:</b> Starts the workflow on demand.</li>
+              <li>
+                <b>Set Variables:</b> Defines the search start index and max
+                pages.
+              </li>
+              <li>
+                <b>HTTP Request:</b> Uses Google Custom Search API to find
+                LinkedIn profiles of creative directors at BMW.
+              </li>
+              <li>
+                <b>Code Node:</b> Processes the API response, extracts relevant
+                info, and handles pagination.
+              </li>
+              <li>
+                <b>Wait Node:</b> Adds a short delay to respect API rate limits.
+              </li>
+              <li>
+                <b>Google Sheets:</b> Appends or updates the results in a Google
+                Sheet for easy review.
+              </li>
+              <li>
+                <b>If Node:</b> Checks if more results are available and loops
+                if needed (up to 100 results due to Google Search API limit, but
+                can be more if needed).
+              </li>
+            </ul>
+            <a
+              href="https://docs.google.com/spreadsheets/d/1I_R_b8sNkhSvvZjcVUJr9KQ1LIrN1pZVq2SOdY7Cf_o/edit?usp=sharing"
+              target="_blank"
+              rel="noopener"
+              class="inline-block mt-4 px-6 py-2 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-semibold shadow hover:from-teal-600 hover:to-cyan-600 transition"
+              >View the Google Sheet Output</a
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer
+      class="bg-gradient-to-r from-slate-800 to-slate-900 text-white mt-16"
+    >
+      <div class="container mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
+        <p class="text-lg font-medium mb-2">
+          Interactive Strategic Plan for Arevera
+        </p>
+        <p class="text-slate-400">Created by Artur Abgaryan.</p>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const appData = {
+          workflow: [
+            {
+              id: "signal",
+              title: "Signal Detection",
+              description:
+                "The system continuously monitors public sources (industry news, press releases, social media) for predefined trigger events, like a brand launching a new campaign or a key executive changing jobs."
+            },
+            {
+              id: "prospect",
+              title: "Prospect Identification",
+              description:
+                "Once a signal is detected, the system identifies the specific individuals associated with that event, pinpointing key decision-makers like a Head of Brand Strategy or Creative Director."
+            },
+            {
+              id: "enrichment",
+              title: "Deep Enrichment",
+              description:
+                'The engine aggregates a comprehensive profile on the prospect and their company using a "waterfall enrichment" technique, querying multiple data providers to gather and cross-verify information.'
+            },
+            {
+              id: "personalization",
+              title: "Personalization Generation",
+              description:
+                "An agentic AI model synthesizes the rich, verified data to generate a draft for a personalized outreach message, crafted to capture Arevera's unique brand voice and value proposition."
+            },
+            {
+              id: "hitl",
+              title: "Human-in-the-Loop Review",
+              description:
+                "The final, critical stage. The complete outreach package is presented to a human for final review, editing, and approval. No communication is sent without explicit sign-off, ensuring 100% quality control."
+            }
+          ],
+          tiers: {
+            mvp: {
+              title: "Lean & Agile (MVP)",
+              concept:
+                "A low-cost, high-speed solution using open-source-centric tools, focused on validating the core workflow with minimal financial outlay.",
+              tools:
+                "n8n, Google Sheets, Free-tier News APIs (NewsData.io), Apollo.io (Free), Apify.",
+              justification:
+                "Engineered for maximum speed to value. It allows Arevera to build and test the entire concept with nearly zero software cost, validating the logic before committing to more expensive tools.",
+              metrics: { cost: 1, speed: 9, scalability: 5, customization: 10 }
+            },
+            scalable: {
+              title: "Scalable (Growth)",
+              concept:
+                "A robust stack using n8n to orchestrate multiple paid, best-in-class data services, creating a powerful and cost-effective engine for growth.",
+              tools:
+                "n8n, HubSpot, Paid Tiers of Apollo.io & Hunter.io, Direct API calls.",
+              justification:
+                "A significant upgrade in data quality and volume. It maintains the flexibility of n8n while leveraging premium data, proving more economical and adaptable than all-in-one platforms.",
+              metrics: { cost: 5, speed: 7, scalability: 9, customization: 10 }
+            },
+            enterprise: {
+              title: "Enterprise (Maximum Power)",
+              concept:
+                "A premium, security-focused system built around n8n Enterprise, connected to top-tier data providers like ZoomInfo via direct API integrations.",
+              tools:
+                "n8n Enterprise, ZoomInfo, Salesforce or HubSpot Enterprise.",
+              justification:
+                "Ideal for organizations requiring the most comprehensive data firehose available while maintaining full control over automation logic and data security, creating a bespoke engine more powerful than off-the-shelf platforms.",
+              metrics: {
+                cost: 10,
+                speed: 6,
+                scalability: 10,
+                customization: 10
+              }
+            }
+          },
+          signals: [
+            {
+              icon: "🚀",
+              text: "A brand announces a new major advertising campaign."
+            },
+            { icon: "�", text: "A company unveils a new flagship product." },
+            {
+              icon: "💰",
+              text: "A startup secures a significant new funding round."
+            },
+            {
+              icon: "👤",
+              text: "A target company appoints a new CMO or VP of Marketing."
+            },
+            {
+              icon: "🤝",
+              text: "News that a brand is reviewing its agency relationships."
+            },
+            {
+              icon: "🏆",
+              text: "A company or campaign wins a prestigious industry award."
+            }
+          ],
+          rare: [
+            {
+              title: "Role",
+              description:
+                'Define the AI\'s persona: "You are a Senior Creative Strategist at Arevera... your tone is insightful, concise, and peer-to-peer."'
+            },
+            {
+              title: "Action",
+              description:
+                'Provide the data and the specific task: "Analyze the following JSON data about a prospect... your task is to draft a 2-3 sentence icebreaker."'
+            },
+            {
+              title: "Result",
+              description:
+                'Define the desired output format and constraints: "The output must be under 50 words and returned as a JSON object with the key `icebreaker_text`."'
+            },
+            {
+              title: "Example",
+              description:
+                "Provide high-quality examples to model the output on, guiding the AI's style and tone (Few-Shot Prompting)."
+            }
+          ],
+          roadmap: [
+            {
+              phase: "Phase 1: Foundation & MVP Build",
+              duration: "Weeks 1-2",
+              tasks:
+                "Setup n8n & Google Sheets, Configure APIs, Build core MVP workflow.",
+              milestone:
+                "Functional MVP capable of processing one target from signal to draft."
+            },
+            {
+              phase: "Phase 2: MVP Pilot & Testing",
+              duration: "Weeks 3-4",
+              tasks:
+                "Run pilot against 5-10 real targets, Human review of all outputs, Gather stakeholder feedback.",
+              milestone:
+                "10-20 high-quality, prepped outreach drafts ready for sending."
+            },
+            {
+              phase: "Phase 3: Iteration & Expansion",
+              duration: "Weeks 5-8",
+              tasks:
+                "Refine workflow and AI prompts, Add more signal sources, Create HITL process documentation.",
+              milestone:
+                "Stable, refined, and documented V2 of the MVP workflow."
+            },
+            {
+              phase: "Phase 4: Scale & Optimization",
+              duration: "Weeks 9-12",
+              tasks:
+                "Analyze performance and ROI, Prepare business case, Recommend next steps (e.g., move to Scalable Stack).",
+              milestone:
+                "A data-driven strategic decision on the future of the platform."
+            }
+          ],
+          risks: [
+            {
+              title: "Data Inaccuracy",
+              description:
+                "Incorrect or outdated information damages credibility. Safeguarded by multi-source data triangulation and final human review."
+            },
+            {
+              title: "Poor Personalization",
+              description:
+                "Generic or awkward AI messages undermine the brand. Safeguarded by the R-A-R-E prompt framework and human approval."
+            },
+            {
+              title: "Brand Dilution",
+              description:
+                "Over-automation feels impersonal. Safeguarded by ensuring the AI is an assistant, with humans focusing on strategy and relationships."
+            },
+            {
+              title: "Data Privacy",
+              description:
+                "Mishandling data has legal consequences. Safeguarded by using a self-hosted n8n instance to keep all prospect data in-house."
+            }
+          ]
+        };
+
+        let activeTier = "mvp";
+        let tierChart;
+
+        function init() {
+          renderWorkflow();
+          renderTierButtons();
+          renderTierDetails(activeTier);
+          createTierChart();
+          renderStrategyCards();
+          renderRoadmap();
+          renderRisks();
+          setupEventListeners();
+          setActiveNav();
+          animateSectionsOnScroll();
+        }
+
+        function animateSectionsOnScroll() {
+          const observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add("animate-fade-in");
+                  observer.unobserve(entry.target);
+                }
+              });
+            },
+            {
+              threshold: 0.1,
+              rootMargin: "0px"
+            }
+          );
+
+          document.querySelectorAll(".card-hover").forEach((el) => {
+            observer.observe(el);
+            el.style.opacity = "0";
+          });
+        }
+
+        function renderWorkflow() {
+          const container = document.getElementById("workflow-diagram");
+          container.innerHTML = appData.workflow
+            .map(
+              (stage, index) => `
+            <div class="flex-1 flex items-center ${
+              index === appData.workflow.length - 1 ? "justify-end" : ""
+            } ${index > 0 ? "justify-center" : ""}">
+                <div id="stage-${stage.id}" data-id="${
+                stage.id
+              }" class="stage-box w-40 h-24 md:w-48 md:h-32 rounded-2xl p-4 flex items-center justify-center text-center font-semibold text-slate-700 animate-fade-in" style="animation-delay: ${
+                index * 0.2
+              }s">
+                    ${stage.title}
+                </div>
+            </div>
+            ${
+              index < appData.workflow.length - 1
+                ? `
+            <div class="flex-shrink-0 text-3xl text-teal-500/50 font-light transform transition-transform duration-300 hover:scale-125">
+                <span class="hidden md:inline">→</span>
+                <span class="md:hidden">↓</span>
+            </div>
+            `
+                : ""
+            }
+        `
+            )
+            .join("");
+
+          document.querySelectorAll(".stage-box").forEach((box) => {
+            box.addEventListener("click", () =>
+              handleStageClick(box.dataset.id)
+            );
+          });
+        }
+
+        function handleStageClick(stageId) {
+          const stage = appData.workflow.find((s) => s.id === stageId);
+          const detailsContent = document.getElementById("details-content");
+
+          document
+            .querySelectorAll(".stage-box")
+            .forEach((box) => box.classList.remove("active"));
+          document.getElementById(`stage-${stageId}`).classList.add("active");
+
+          detailsContent.style.opacity = "0";
+          detailsContent.style.transform = "translateY(10px)";
+
+          setTimeout(() => {
+            detailsContent.innerHTML = `
+              <h4 class="font-bold text-lg gradient-text mb-4">${stage.title}</h4>
+              <p class="text-slate-600 leading-relaxed">${stage.description}</p>
+            `;
+            detailsContent.style.opacity = "1";
+            detailsContent.style.transform = "translateY(0)";
+          }, 200);
+        }
+
+        function renderTierButtons() {
+          const container = document.getElementById("tier-buttons");
+          container.innerHTML = Object.keys(appData.tiers)
+            .map((key, index) => {
+              const tier = appData.tiers[key];
+              return `
+                <button 
+                  data-tier="${key}" 
+                  class="tier-button px-6 py-3 text-sm font-semibold transition-all duration-300
+                    ${index === 0 ? "rounded-l-lg" : ""} 
+                    ${
+                      index === Object.keys(appData.tiers).length - 1
+                        ? "rounded-r-lg"
+                        : ""
+                    }
+                    border border-slate-200 bg-white/80 backdrop-blur text-slate-700 hover:bg-slate-50
+                    ${key === activeTier ? "active" : ""}
+                    ${index === 1 ? "z-10" : ""}"
+                >
+                    ${tier.title}
+                </button>
+            `;
+            })
+            .join("");
+
+          document.querySelectorAll(".tier-button").forEach((button) => {
+            button.addEventListener("click", () =>
+              handleTierChange(button.dataset.tier)
+            );
+          });
+        }
+
+        function handleTierChange(tierId) {
+          activeTier = tierId;
+          renderTierButtons();
+          renderTierDetails(tierId);
+          updateTierChart();
+        }
+
+        function renderTierDetails(tierId) {
+          const tier = appData.tiers[tierId];
+          const container = document.getElementById("tier-details");
+          container.innerHTML = `
+            <h3 class="text-xl font-bold text-teal-700 mb-2">${tier.title}</h3>
+            <p class="text-slate-600 font-medium mb-4">${tier.concept}</p>
+            <div class="text-sm space-y-3">
+                <div>
+                    <strong class="text-slate-800">Core Tools:</strong>
+                    <p class="text-slate-500">${tier.tools}</p>
+                </div>
+                <div>
+                    <strong class="text-slate-800">Justification:</strong>
+                    <p class="text-slate-500">${tier.justification}</p>
+                </div>
+            </div>
+        `;
+        }
+
+        function createTierChart() {
+          const ctx = document
+            .getElementById("tier-comparison-chart")
+            .getContext("2d");
+          const initialData = appData.tiers[activeTier].metrics;
+
+          tierChart = new Chart(ctx, {
+            type: "bar",
+            data: {
+              labels: [
+                "Cost Efficiency",
+                "Implementation Speed",
+                "Scalability",
+                "Customization"
+              ],
+              datasets: [
+                {
+                  label: appData.tiers[activeTier].title,
+                  data: [
+                    11 - initialData.cost,
+                    initialData.speed,
+                    initialData.scalability,
+                    initialData.customization
+                  ],
+                  backgroundColor: [
+                    "rgba(249, 115, 22, 0.6)", // orange-400
+                    "rgba(13, 148, 136, 0.6)", // teal-600
+                    "rgba(59, 130, 246, 0.6)", // blue-500
+                    "rgba(107, 114, 128, 0.6)" // gray-500
+                  ],
+                  borderColor: [
+                    "rgba(249, 115, 22, 1)",
+                    "rgba(13, 148, 136, 1)",
+                    "rgba(59, 130, 246, 1)",
+                    "rgba(107, 114, 128, 1)"
+                  ],
+                  borderWidth: 1
+                }
+              ]
+            },
+            options: {
+              indexAxis: "y",
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                x: {
+                  beginAtZero: true,
+                  max: 10,
+                  grid: {
+                    color: "#e2e8f0" // slate-200
+                  },
+                  ticks: {
+                    color: "#475569" // slate-600
+                  }
+                },
+                y: {
+                  grid: {
+                    display: false
+                  },
+                  ticks: {
+                    color: "#475569" // slate-600
+                  }
+                }
+              },
+              plugins: {
+                legend: {
+                  display: false
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function (context) {
+                      let label = context.dataset.label || "";
+                      if (label) {
+                        label += ": ";
+                      }
+                      if (context.parsed.x !== null) {
+                        label += context.parsed.x + " / 10";
+                      }
+                      return label;
+                    }
+                  }
+                }
+              }
+            }
+          });
+        }
+
+        function updateTierChart() {
+          const newData = appData.tiers[activeTier].metrics;
+          tierChart.data.datasets[0].data = [
+            11 - newData.cost,
+            newData.speed,
+            newData.scalability,
+            newData.customization
+          ];
+          tierChart.data.datasets[0].label = appData.tiers[activeTier].title;
+          tierChart.update();
+        }
+
+        function renderStrategyCards() {
+          const signalsContainer = document.getElementById("signal-cards");
+          signalsContainer.innerHTML = appData.signals
+            .map(
+              (signal, index) => `
+            <div class="flex items-start p-4 bg-slate-50/50 backdrop-blur rounded-lg transition-all duration-300 hover:transform hover:translate-x-2" style="animation-delay: ${
+              index * 0.1
+            }s">
+                <span class="text-2xl mr-4">${signal.icon}</span>
+                <p class="text-sm text-slate-600 leading-relaxed">${
+                  signal.text
+                }</p>
+            </div>
+        `
+            )
+            .join("");
+
+          const rareContainer = document.getElementById("rare-cards");
+          rareContainer.innerHTML = appData.rare
+            .map(
+              (item, index) => `
+            <div class="p-4 bg-slate-50/50 backdrop-blur rounded-lg transition-all duration-300 hover:transform hover:translate-x-2" style="animation-delay: ${
+              index * 0.1
+            }s">
+                <h4 class="font-semibold gradient-text mb-2">${item.title}</h4>
+                <p class="text-sm text-slate-600 leading-relaxed">${
+                  item.description
+                }</p>
+            </div>
+        `
+            )
+            .join("");
+        }
+
+        function renderRoadmap() {
+          const container = document.getElementById("timeline-container");
+          container.innerHTML = appData.roadmap
+            .map(
+              (item, index) => `
+            <div class="bg-white/80 backdrop-blur p-8 rounded-2xl shadow-lg card-hover" style="animation-delay: ${
+              index * 0.2
+            }s">
+                <div class="md:flex justify-between items-center mb-6">
+                    <h4 class="text-xl font-bold gradient-text">${
+                      item.phase
+                    }</h4>
+                    <span class="text-sm font-semibold text-teal-600 mt-2 md:mt-0 block">${
+                      item.duration
+                    }</span>
+                </div>
+                <div class="bg-slate-100 h-2 w-full rounded-full mb-6 overflow-hidden">
+                    <div class="bg-gradient-to-r from-teal-500 to-cyan-500 h-2 rounded-full transform transition-transform duration-1000" style="width: 100%;"></div>
+                </div>
+                <p class="text-slate-600 leading-relaxed mb-4"><strong class="text-slate-700">Tasks:</strong> ${
+                  item.tasks
+                }</p>
+                <p class="text-slate-600 leading-relaxed font-medium"><strong class="text-slate-700">Milestone:</strong> ${
+                  item.milestone
+                }</p>
+            </div>
+        `
+            )
+            .join("");
+        }
+
+        function renderRisks() {
+          const container = document.getElementById("risks-list");
+          container.innerHTML = appData.risks
+            .map(
+              (risk, index) => `
+            <li class="p-6 bg-slate-50/50 backdrop-blur rounded-xl transition-all duration-300 hover:transform hover:translate-x-2" style="animation-delay: ${
+              index * 0.1
+            }s">
+                <h4 class="font-semibold gradient-text mb-2">${risk.title}</h4>
+                <p class="text-slate-600 leading-relaxed">${
+                  risk.description
+                }</p>
+            </li>
+        `
+            )
+            .join("");
+        }
+
+        function setupEventListeners() {
+          const mobileNav = document.getElementById("mobile-nav");
+          mobileNav.addEventListener("change", (e) => {
+            window.location.hash = e.target.value;
+          });
+
+          const sections = document.querySelectorAll("section");
+          const navLinks = document.querySelectorAll(".nav-link");
+
+          window.addEventListener("scroll", () => {
+            setActiveNav();
+          });
+        }
+
+        function setActiveNav() {
+          let current = "";
+          const sections = document.querySelectorAll("section");
+          const navLinks = document.querySelectorAll(".nav-link");
+
+          sections.forEach((section) => {
+            const sectionTop = section.offsetTop;
+            if (pageYOffset >= sectionTop - 80) {
+              current = section.getAttribute("id");
+            }
+          });
+
+          navLinks.forEach((link) => {
+            link.classList.remove("active-nav");
+            if (link.getAttribute("href").includes(current)) {
+              link.classList.add("active-nav");
+            }
+          });
+
+          const mobileNav = document.getElementById("mobile-nav");
+          mobileNav.value = `#${current}`;
+        }
+
+        init();
+      });
+    </script>
+  </body>
+</html>
